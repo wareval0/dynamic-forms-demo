@@ -1,0 +1,26 @@
+services:
+  postgres-db:
+    image: postgres:15
+    container_name: dynamic_forms_db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: dynamic_forms
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    
+  redis-cache:
+    image: redis:7-alpine
+    container_name: dynamic_forms_cache
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+
+volumes:
+  pgdata:
+  redisdata:

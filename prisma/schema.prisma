@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id              String           @id @default(cuid())
+  name            String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  formDefinitions FormDefinition[]
+  patients        Patient[]
+
+  @@map("tenants")
+}
+
+model Patient {
+  id            String                @id @default(cuid())
+  documentId    String                @unique
+  firstName     String
+  lastName      String
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+  tenantId      String
+  consultations MedicalConsultation[]
+  tenant        Tenant                @relation(fields: [tenantId], references: [id])
+
+  @@map("patients")
+}
+
+model FormDefinition {
+  id               String                @id @default(cuid())
+  formCode         String
+  version          Int
+  schemaDefinition Json
+  isActive         Boolean               @default(true)
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  tenantId         String
+  tenant           Tenant                @relation(fields: [tenantId], references: [id])
+  consultations    MedicalConsultation[]
+
+  @@unique([tenantId, formCode, version])
+  @@map("form_definitions")
+}
+
+model MedicalConsultation {
+  id               String         @id @default(cuid())
+  createdAt        DateTime       @default(now())
+  patientId        String
+  formDefinitionId String
+  formData         Json
+  formDefinition   FormDefinition @relation(fields: [formDefinitionId], references: [id])
+  patient          Patient        @relation(fields: [patientId], references: [id])
+
+  @@index([formData], type: Gin)
+  @@map("medical_consultations")
+}

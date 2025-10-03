@@ -1,0 +1,605 @@
+{
+	"info": {
+		"_postman_id": "0f242050-d7a6-401c-91fe-0f7cd33b1dd8",
+		"name": "Formularios Dinámicos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29228723"
+	},
+	"item": [
+		{
+			"name": "[SETUP] 1. Crear Entidades Base",
+			"item": [
+				{
+					"name": "Crear Tenant A: Clínica Principal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.collectionVariables.set(\"tenantId_A\", response.id);",
+									"console.log(\"Saved tenantId_A:\", response.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Clínica Principal\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tenants",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tenants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Tenant B: Clínica Secundaria",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.collectionVariables.set(\"tenantId_B\", response.id);",
+									"console.log(\"Saved tenantId_B:\", response.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Clínica Secundaria\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tenants",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tenants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tenants",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tenantId\": \"{{tenantId_A}}\",\n    \"patientId\": \"{{patientId_A}}\",\n    \"formCode\": \"medicina-general\",\n    \"formData\": {\n        \"anamnesis\": \"El paciente refiere un fuerte dolor de cabeza sin mejoría.\",\n        \"systolicPressure\": 120\n    }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tenants",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tenants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Paciente para Tenant A",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.collectionVariables.set(\"patientId_A\", response.id);",
+									"console.log(\"Saved patientId_A:\", response.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Juan\",\n    \"lastName\": \"Perez\",\n    \"documentId\": \"12345678A\",\n    \"tenantId\": \"{{tenantId_A}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/patients",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"patients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Paciente para Tenant B",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.collectionVariables.set(\"patientId_B\", response.id);",
+									"console.log(\"Saved patientId_B:\", response.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Maria\",\n    \"lastName\": \"Garcia\",\n    \"documentId\": \"87654321B\",\n    \"tenantId\": \"{{tenantId_B}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/patients",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"patients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Patients",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tenantId\": \"{{tenantId_A}}\",\n    \"patientId\": \"{{patientId_A}}\",\n    \"formCode\": \"medicina-general\",\n    \"formData\": {\n        \"anamnesis\": \"El paciente refiere un fuerte dolor de cabeza sin mejoría.\",\n        \"systolicPressure\": 120\n    }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/patients",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"patients"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[SETUP] 2. Crear Definiciones de Formularios",
+			"item": [
+				{
+					"name": "Crear Form Definition V1 para Tenant A (Inactiva)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"formCode\": \"medicina-general\",\n    \"version\": 1,\n    \"isActive\": false,\n    \"tenantId\": \"{{tenantId_A}}\",\n    \"schemaDefinition\": {\n        \"steps\": [\n            {\n                \"title\": \"Datos Principales V1\",\n                \"fields\": [\n                    {\n                        \"name\": \"anamnesis\",\n                        \"label\": \"Anamnesis del Paciente\",\n                        \"type\": \"textarea\",\n                        \"validations\": { \"required\": true, \"minLength\": 20 }\n                    },\n                    {\n                        \"name\": \"systolicPressure\",\n                        \"label\": \"Presión Sistólica\",\n                        \"type\": \"number\",\n                        \"validations\": { \"required\": true, \"min\": 50, \"max\": 300 }\n                    }\n                ]\n            }\n        ]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/form-definitions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"form-definitions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Form Definition V2 para Tenant A (Activa)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"formCode\": \"medicina-general\",\n    \"version\": 2,\n    \"isActive\": true,\n    \"tenantId\": \"{{tenantId_A}}\",\n    \"schemaDefinition\": {\n        \"steps\": [\n            {\n                \"title\": \"Datos Principales V2\",\n                \"fields\": [\n                    {\n                        \"name\": \"anamnesis\",\n                        \"label\": \"Anamnesis del Paciente\",\n                        \"type\": \"textarea\",\n                        \"validations\": { \"required\": true, \"minLength\": 20 }\n                    },\n                    {\n                        \"name\": \"systolicPressure\",\n                        \"label\": \"Presión Sistólica\",\n                        \"type\": \"number\",\n                        \"validations\": { \"required\": true, \"min\": 50, \"max\": 300 }\n                    },\n                    {\n                        \"name\": \"diagnosisCode\",\n                        \"label\": \"Código de Diagnóstico (ICD-10)\",\n                        \"type\": \"text\",\n                        \"validations\": { \"required\": true, \"minLength\": 3, \"maxLength\": 10 }\n                    }\n                ]\n            }\n        ]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/form-definitions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"form-definitions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Form Definition V1 para Tenant B (Activa)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"formCode\": \"medicina-general\",\n    \"version\": 1,\n    \"isActive\": true,\n    \"tenantId\": \"{{tenantId_B}}\",\n    \"schemaDefinition\": {\n        \"steps\": [\n            {\n                \"title\": \"Registro Rápido\",\n                \"fields\": [\n                    {\n                        \"name\": \"visitReason\",\n                        \"label\": \"Motivo de la Visita\",\n                        \"type\": \"text\",\n                        \"validations\": { \"required\": true }\n                    }\n                ]\n            }\n        ]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/form-definitions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"form-definitions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Form Definitions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/form-definitions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"form-definitions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[TESTS] Pruebas de Lógica de Consultas",
+			"item": [
+				{
+					"name": "Versioning: Usar V1 (DEBE FALLAR)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.test(\"Error should be about missing 'diagnosisCode'\", function () {",
+									"    pm.expect(response.errors).to.have.property('fieldErrors');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tenantId\": \"{{tenantId_A}}\",\n    \"patientId\": \"{{patientId_A}}\",\n    \"formCode\": \"medicina-general\",\n    \"formData\": {\n        \"anamnesis\": \"El paciente refiere un fuerte dolor de cabeza sin mejoría.\",\n        \"systolicPressure\": 120\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/consultations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Versioning: Usar V2 (DEBE FUNCIONAR)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.test(\"Response should have an ID\", function () {",
+									"    pm.expect(response).to.have.property('id');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tenantId\": \"{{tenantId_A}}\",\n    \"patientId\": \"{{patientId_A}}\",\n    \"formCode\": \"medicina-general\",\n    \"formData\": {\n        \"anamnesis\": \"El paciente reporta síntomas de gripe y fiebre alta.\",\n        \"systolicPressure\": 125,\n        \"diagnosisCode\": \"J11.1\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/consultations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Strict Validation: Campo Extra (DEBE FALLAR)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.test(\"Error should be about an unrecognized key\", function () {",
+									"    pm.expect(response.errors.formErrors[0]).to.include(\"Unrecognized key\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tenantId\": \"{{tenantId_A}}\",\n    \"patientId\": \"{{patientId_A}}\",\n    \"formCode\": \"medicina-general\",\n    \"formData\": {\n        \"anamnesis\": \"El paciente reporta síntomas de gripe y fiebre alta.\",\n        \"systolicPressure\": 125,\n        \"diagnosisCode\": \"J11.1\",\n        \"temperature\": 38.5\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/consultations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tenant Isolation: Usar Tenant B (DEBE FUNCIONAR)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.test(\"Response should have an ID\", function () {",
+									"    pm.expect(response).to.have.property('id');",
+									"});",
+									"pm.test(\"Form data should contain 'visitReason'\", function () {",
+									"    pm.expect(response.formData).to.have.property('visitReason');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tenantId\": \"{{tenantId_B}}\",\n    \"patientId\": \"{{patientId_B}}\",\n    \"formCode\": \"medicina-general\",\n    \"formData\": {\n        \"visitReason\": \"Chequeo anual de rutina.\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/consultations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Consultations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/consultations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consultations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000"
+		},
+		{
+			"key": "tenantId_A",
+			"value": ""
+		},
+		{
+			"key": "patientId_A",
+			"value": ""
+		},
+		{
+			"key": "tenantId_B",
+			"value": ""
+		},
+		{
+			"key": "patientId_B",
+			"value": ""
+		}
+	]
+}
