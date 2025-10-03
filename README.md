@@ -26,7 +26,7 @@ La estrategia de persistencia de datos se basó en un principio fundamental: *�
 - JSONB para lo Dinámico: Para el contenido de los formularios (`formData`), que varía por `tenant` y evoluciona en el tiempo, se eligió el tipo `jsonb` de *PostgreSQL*. Esta decisión ofrece una flexibilidad inmensa, permitiendo que cada inquilino defina estructuras de datos complejas y anidadas sin necesidad de realizar costosas migraciones de esquema en la base de datos. Se evita así la sobrecarga y complejidad de patrones alternativos como *EAV (Entidad-Atributo-Valor)*, que son notoriamente difíciles de consultar y mantener.
 - La Sinergia: Este enfoque híbrido logra un equilibrio óptimo. Mantenemos la solidez y las garantías del modelo relacional para el esqueleto de la aplicación, mientras delegamos la flexibilidad necesaria para los datos de negocio dinámicos al potente motor de `jsonb` de *PostgreSQL*.
 
-![image-4](https://github.com/user-attachments/assets/f7a40c5b-ffdd-420f-a5fe-4170d4844937)
+![image-4](https://github.com/user-attachments/assets/8c3f93f1-e0e9-4da5-96c5-d7e0059e6481)
 
 ### Motor de integridad en la capa de aplicación
 
@@ -39,7 +39,7 @@ El núcleo de esta arquitectura reside en un cambio de paradigma: “*si la base
     3. Aplica este *schema* generado para validar los datos entrantes. Cualquier desviación, ya sea un tipo incorrecto, un campo faltante o una propiedad extra no permitida, resulta en el rechazo inmediato de la petición.
 - Gestión de Versiones de Formularios: Para manejar la evolución de los formularios, se implementó un sistema de versionado en la tabla `FormDefinition`. Cuando un *tenant* actualiza un formulario, se crea una nueva versión en lugar de sobrescribir la antigua. Cada registro en `MedicalConsultation` se enlaza de forma inmutable a la versión exacta (`formDefinitionId`) del formulario que se usó para validarlo. Esto garantiza la **integridad histórica** y permite analizar datos antiguos con el contexto de las reglas que se les aplicaron en su momento.
 
-![image-5](https://github.com/user-attachments/assets/8349a533-fec3-4ccb-8350-0b7e6c69f27a)
+![image-5](https://github.com/user-attachments/assets/4b4ea0fc-1e9c-422e-acc0-4dc985092d61)
 
 ### Garantizando rendimiento y escalabilidad
 
@@ -49,8 +49,7 @@ Una arquitectura flexible no sirve de nada si no es performante. Se implementaro
 - Validación Empírica (Lectura): Las pruebas de carga lo demostraron. Las búsquedas de texto libre (`string_contains`) dentro del `jsonb` sobre una tabla de **10,000 registros** mostraron una latencia en el percentil 95 (`p95`) de **~35ms**, probando que el índice GIN es una solución eficaz y de alto rendimiento.
 - Caché Distribuido con Redis: La generación de un schema de *Zod*, aunque rápida, es un trabajo computacional. Realizarlo en cada petición sería un desperdicio de recursos. La solución implementa una capa de caché que almacena los validadores de Zod ya compilados. En un entorno de producción con múltiples instancias, esta capa se implementaría con ***Redis***, un almacén de caché centralizado y compartido. Esto asegura que cada versión de cada formulario se "compila" una sola vez, y todas las instancias de la aplicación se benefician de ese trabajo, reduciendo drásticamente la latencia y la carga en el servidor.
 
-![image-6](https://github.com/user-attachments/assets/467d242f-2a32-4375-80cf-ac30b7567f98)
-
+![image-6](https://github.com/user-attachments/assets/d090b537-08ec-42db-b55f-45fce142cf48)
 
 ## Project setup
 
