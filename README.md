@@ -1,4 +1,4 @@
-# Dybamic Forms Demo
+# Dynamic Forms Demo
 
 ## **Estrategia para un sistema *Multi-Tenant* de formularios dinámicos con integridad garantizada en la capa de aplicación**
 
